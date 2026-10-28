@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attenda — Smart Attendance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><span></span><span></span><span></span></div>
+      <div><div class="brand-name">attenda<span>.</span></div><div class="brand-caption">CAMPUS ATTENDANCE</div></div>
+    </div>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="overview"><span class="nav-icon">◫</span> Overview</button>
+      <button class="nav-item" data-view="students"><span class="nav-icon">♙</span> Students</button>
+      <button class="nav-item" data-view="enroll"><span class="nav-icon">◎</span> Face enrollment</button>
+      <button class="nav-item" data-view="scan"><span class="nav-icon">⌾</span> Live scan</button>
+      <button class="nav-item" data-view="attendance"><span class="nav-icon">▤</span> Attendance</button>
+      <button class="nav-item" data-view="testing"><span class="nav-icon">✓</span> Testing dashboard</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="privacy-note"><div class="privacy-icon">✳</div><div><strong>Local & private</strong><p>Demo data stays on this device.</p></div></div>
+      <div class="profile">
+        <div class="avatar">SA</div><div class="profile-text"><strong>System Admin</strong><span>Prototype workspace</span></div><span class="profile-dot"></span>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="mobile-brand">attenda<span>.</span></div>
+      <div class="breadcrumb">Workspace <span>/</span> <strong id="crumb">Overview</strong></div>
+      <div class="top-actions"><span class="date-pill"><span class="tiny-dot"></span> <span id="topDate">Today</span></span><div class="top-avatar">SA</div></div>
+    </header>
+
+    <section class="view active" id="view-overview">
+      <div class="page-heading">
+        <div><div class="eyebrow">WEDNESDAY · CAMPUS OVERVIEW</div><h1>Good afternoon.</h1><p class="subheading">Here’s what’s happening with attendance today.</p></div>
+        <button class="button button-dark" data-goto="scan"><span>＋</span> Start attendance</button>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span>Total students</span><span class="stat-icon sand">♙</span></div><div class="stat-number" id="statStudents">0</div><div class="stat-foot"><span class="mini-line">↗</span> Registered in this workspace</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Present today</span><span class="stat-icon sage">✓</span></div><div class="stat-number" id="statPresent">0</div><div class="stat-foot"><span class="status-dot"></span> Attendance recorded today</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Attendance records</span><span class="stat-icon lavender">▤</span></div><div class="stat-number" id="statRecords">0</div><div class="stat-foot">All-time recorded entries</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Recognition engine</span><span class="stat-icon rose">◎</span></div><div class="stat-number small-stat" id="statEngine">Ready</div><div class="stat-foot"><span class="status-dot"></span> Local OpenCV model</div></article>
+      </div>
+      <div class="content-grid">
+        <article class="panel welcome-panel">
+          <div class="panel-kicker">QUICK START</div><h2>Attendance, made a little simpler.</h2><p>Register your students, add a few face samples, then scan to record attendance in seconds.</p>
+          <div class="steps">
+            <div class="step"><div class="step-num">01</div><div><strong>Add your students</strong><span>Start with a name and roll number.</span></div><button class="arrow-button" data-goto="students">↗</button></div>
+            <div class="step"><div class="step-num">02</div><div><strong>Enroll face samples</strong><span>Capture a few clear angles in good light.</span></div><button class="arrow-button" data-goto="enroll">↗</button></div>
+            <div class="step"><div class="step-num">03</div><div><strong>Scan and mark present</strong><span>Match a registered face and log the time.</span></div><button class="arrow-button" data-goto="scan">↗</button></div>
+          </div>
+        </article>
+        <article class="panel recent-panel">
+          <div class="panel-header"><div><div class="panel-kicker">LIVE ACTIVITY</div><h3>Recent attendance</h3></div><button class="text-button" data-goto="attendance">View all ↗</button></div>
+          <div id="recentList" class="recent-list"><div class="empty-state">No attendance records yet.<br>Start a scan to see activity here.</div></div>
+        </article>
+      </div>
+      <div class="bottom-note"><span>✳</span><div><strong>A note on the prototype</strong><p>Face matching is a local educational demo. Always get consent before enrolling face samples; do not use it for consequential attendance decisions without proper validation and safeguards.</p></div></div>
+    </section>
+
+    <section class="view" id="view-students">
+      <div class="page-heading"><div><div class="eyebrow">DIRECTORY</div><h1>Students</h1><p class="subheading">Manage the students registered in your workspace.</p></div><button class="button button-dark" id="openStudentForm">＋ Add student</button></div>
+      <div class="toolbar"><div class="search-box"><span>⌕</span><input id="studentSearch" placeholder="Search name or roll number…" /></div><span class="result-count" id="studentCount">0 students</span></div>
+      <div class="panel table-panel"><table><thead><tr><th>STUDENT</th><th>ROLL NUMBER</th><th>DEPARTMENT</th><th>FACE SAMPLES</th><th>ATTENDANCE</th><th></th></tr></thead><tbody id="studentsTable"></tbody></table><div id="studentsEmpty" class="empty-state">No students registered yet. Add your first student to get started.</div></div>
+    </section>
+
+    <section class="view" id="view-enroll">
+      <div class="page-heading"><div><div class="eyebrow">BIOMETRIC SETUP</div><h1>Face enrollment</h1><p class="subheading">Capture a small set of face samples for the local demo model.</p></div></div>
+      <div class="enroll-layout">
+        <article class="panel camera-panel">
+          <div class="panel-header"><div><div class="panel-kicker">CAMERA PREVIEW</div><h3>Capture face samples</h3></div><span class="camera-tag"><span class="status-dot"></span> Local camera</span></div>
+          <div class="camera-frame" id="enrollFrame"><video id="enrollVideo" autoplay playsinline muted></video><canvas id="enrollCanvas" hidden></canvas><div class="camera-placeholder" id="enrollPlaceholder"><div class="camera-symbol">⌾</div><strong>Your camera preview will appear here</strong><span>Position one face inside the frame.</span></div><div class="face-guide"></div><div class="camera-overlay"><span>LIVE PREVIEW</span><span id="sampleCounter">0 samples</span></div></div>
+          <div class="camera-controls"><button class="button button-outline" id="startEnrollCamera">Enable camera</button><button class="button button-dark" id="captureSample" disabled>Capture sample <span>＋</span></button></div>
+          <div class="sample-strip" id="sampleStrip"><span class="sample-hint">Your captured samples will appear here.</span></div>
+        </article>
+        <aside class="panel enroll-side">
+          <div class="panel-kicker">ENROLLMENT DETAILS</div><h3>Who are we enrolling?</h3><p class="muted">Choose a student before you begin capturing.</p>
+          <label class="field-label" for="enrollStudent">Student</label><select id="enrollStudent" class="field"><option value="">Select a student…</option></select>
+          <div class="tip-card"><span class="tip-icon">✳</span><div><strong>For a better match</strong><p>Use even lighting, remove strong backlight, look toward the camera, and capture a few slightly different angles.</p></div></div>
+          <div class="enroll-count"><span>Samples in this session</span><strong id="sampleCountSide">0 / 8</strong></div><div class="progress"><span id="sampleProgress"></span></div>
+          <button class="button button-dark full-width" id="saveEnrollment" disabled>Save & train model</button>
+          <p class="microcopy">At least 3 usable samples required. 8–12 is recommended.</p>
+          <div id="enrollMessage" class="message hidden"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view" id="view-scan">
+      <div class="page-heading"><div><div class="eyebrow">ATTENDANCE DESK</div><h1>Live face scan</h1><p class="subheading">Recognize an enrolled student and record today's attendance.</p></div><span class="session-pill"><span class="status-dot"></span> Daily session</span></div>
+      <div class="scan-layout">
+        <article class="panel scan-camera-panel"><div class="panel-header"><div><div class="panel-kicker">RECOGNITION STATION</div><h3>Camera scan</h3></div><span class="camera-tag"><span class="status-dot"></span> On device</span></div>
+          <div class="camera-frame scan-frame" id="scanFrame"><video id="scanVideo" autoplay playsinline muted></video><canvas id="scanCanvas" hidden></canvas><div class="camera-placeholder" id="scanPlaceholder"><div class="camera-symbol">◎</div><strong>Ready when you are</strong><span>Enable the camera to begin a scan.</span></div><div class="face-guide"></div><div class="camera-overlay"><span>FACE RECOGNITION</span><span id="scanState">STANDBY</span></div></div>
+          <div class="camera-controls"><button class="button button-outline" id="startScanCamera">Enable camera</button><button class="button button-dark" id="scanNow" disabled>Scan face <span>⌾</span></button></div>
+          <div class="scan-disclaimer">Please scan one consenting, registered participant at a time. A visual match is not proof of identity.</div>
+        </article>
+        <aside class="panel result-panel"><div class="panel-kicker">SCAN RESULT</div><div class="result-illustration" id="resultIllustration">◎</div><div class="result-title" id="resultTitle">Waiting for scan</div><p id="resultDescription" class="muted center">Your scan result will appear here. Make sure the student has been enrolled first.</p><div class="result-details hidden" id="resultDetails"><div><span>Student</span><strong id="resultName">—</strong></div><div><span>Roll number</span><strong id="resultRoll">—</strong></div><div><span>Time</span><strong id="resultTime">—</strong></div><div><span>Match distance</span><strong id="resultConfidence">—</strong></div></div><div id="scanMessage" class="message hidden"></div><button class="button button-outline full-width" data-goto="attendance">View attendance register ↗</button></aside>
+      </div>
+    </section>
+
+    <section class="view" id="view-attendance">
+      <div class="page-heading"><div><div class="eyebrow">RECORDS & REPORTS</div><h1>Attendance</h1><p class="subheading">Review daily attendance and export a shareable CSV report.</p></div><button class="button button-dark" id="exportCsv">↓ Export CSV</button></div>
+      <div class="attendance-tools"><div><label class="field-label" for="attendanceDate">Attendance date</label><input type="date" id="attendanceDate" class="field date-field"></div><div class="attendance-summary"><span class="summary-mark">✓</span><div><strong id="attendanceTotal">0 present</strong><span>Records for selected date</span></div></div></div>
+      <div class="panel table-panel"><table><thead><tr><th>STUDENT</th><th>ROLL NUMBER</th><th>DATE</th><th>TIME</th><th>STATUS</th></tr></thead><tbody id="attendanceTable"></tbody></table><div id="attendanceEmpty" class="empty-state">No attendance records for this date.</div></div>
+      <p class="table-footnote">Attendance is recorded once per student per day. The date and time are taken from this computer.</p>
+    </section>
+    <section class="view" id="view-testing">
+      <div class="page-heading"><div><div class="eyebrow">QUALITY ASSURANCE</div><h1>Testing dashboard</h1><p class="subheading">Run the automated pytest suite and review actual results from your application.</p></div><button class="button button-dark" id="runTestsButton">▶ Run automated tests</button></div>
+      <div class="test-summary-grid">
+        <article class="stat-card"><div class="stat-top"><span>Total executed</span><span class="stat-icon sand">▤</span></div><div class="stat-number" id="testTotal">—</div><div class="stat-foot">Test cases in latest run</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Passed</span><span class="stat-icon sage">✓</span></div><div class="stat-number" id="testPassed">—</div><div class="stat-foot">Verified by pytest</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Failed / errors</span><span class="stat-icon rose">!</span></div><div class="stat-number" id="testFailed">—</div><div class="stat-foot">Needs investigation</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Skipped</span><span class="stat-icon lavender">↷</span></div><div class="stat-number" id="testSkipped">—</div><div class="stat-foot">Not executed</div></article>
+      </div>
+      <div class="panel testing-panel"><div class="panel-header"><div><div class="panel-kicker">LATEST EXECUTION</div><h3 id="testRunTitle">No test run yet</h3></div><span id="testRunBadge" class="test-badge neutral">Waiting</span></div><p class="muted" id="testRunHint">Click “Run automated tests” to execute the real Python test suite. Camera access is not required for these API tests.</p><div class="test-table-wrap"><table><thead><tr><th>TEST CASE</th><th>RESULT</th></tr></thead><tbody id="testResultsBody"></tbody></table></div><div id="testEmpty" class="empty-state">Your executed test cases will appear here, with their real pass/fail status.</div><details class="test-output"><summary>View technical test output</summary><pre id="testOutput">No output yet.</pre></details></div>
+      <div class="bottom-note"><span>✳</span><div><strong>What is automated here?</strong><p>The suite checks application routes, student registration, validation, face-enrollment request handling, mocked recognition flow, duplicate attendance, records, deletion, and CSV export. Webcam recognition accuracy itself is not proved by these automated tests.</p></div></div>
+    </section>
+
+    <footer class="footer"><span>ATTENDA <span class="footer-dot">●</span> SETM LAB PROTOTYPE</span><span>Thoughtfully designed for campus workflows.</span></footer>
+  </main>
+</div>
+
+<div class="modal-backdrop hidden" id="studentModal"><div class="modal"><div class="modal-heading"><div><div class="panel-kicker">STUDENT DIRECTORY</div><h2>Add a student</h2><p>Enter the student's basic details to get started.</p></div><button class="close-modal" id="closeStudentModal">×</button></div><form id="studentForm"><label class="field-label" for="studentName">Full name</label><input class="field" id="studentName" required placeholder="e.g. Aarya Khobragade"><label class="field-label" for="studentRoll">Roll number</label><input class="field" id="studentRoll" required placeholder="e.g. 01"><div class="form-row"><div><label class="field-label" for="studentDept">Department</label><select class="field" id="studentDept"><option>CSE (AI & DS)</option><option>CSE</option><option>IT</option><option>ENTC</option><option>Other</option></select></div><div><label class="field-label" for="studentYear">Year</label><select class="field" id="studentYear"><option>Second Year</option><option>First Year</option><option>Third Year</option><option>Final Year</option></select></div></div><div id="studentFormMessage" class="message hidden"></div><div class="modal-actions"><button type="button" class="button button-outline" id="cancelStudent">Cancel</button><button type="submit" class="button button-dark">Add student</button></div></form></div></div>
+<div id="toast" class="toast"></div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body></html>
