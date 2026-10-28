@@ -7,3 +7,6 @@ __pycache__/
 .env
 *.db
 *.sqlite3
+
+# Runtime-generated files
+*.log
