@@ -58,3 +58,9 @@ The command prints each test and a final summary such as `X passed`. The exact n
 The sidebar includes **Testing dashboard**. Open it and click **Run automated tests** to execute the real `pytest` suite on the local machine. The page shows per-test pass/fail/skip status, totals, and the technical pytest output. The local Flask app must be running and pytest must be installed in the same Python environment (the included run scripts install it).
 
 The test suite uses a temporary database and mocked camera/model operations. It verifies application/API logic; it does not establish real-world biometric accuracy or test webcam recognition quality.
+
+## Live Demo
+
+**Deployed Application:** https://smart-attendance-management-system-p4xr.onrender.com
+
+**GitHub Repository:** https://github.com/nikeetagurve/smart-attendance-management-system
